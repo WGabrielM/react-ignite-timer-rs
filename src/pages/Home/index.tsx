@@ -10,14 +10,20 @@ import {
   CountDownContainer,
   StartCountDownButton,
 } from "./styles";
-import { useState } from "react";
 
 export default function Home() {
-  const [task, setTask] = useState("");
+  const { register, handleSubmit, watch } = useForm();
+
+  function handleCreateNewCycle(data: any) {
+    console.log(data);
+  }
+
+  const task = watch('task')
+  const isSubmitDisabled= !task;
 
   return (
     <HomeContainer>
-      <form action="">
+      <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
         <FormContainer>
           <label htmlFor="task">Vou trabalhar em</label>
           <TaskInput
@@ -26,8 +32,11 @@ export default function Home() {
             list="task-suggestions"
             placeholder="Dê um nome para o seu projeto"
             // Controlled component
-            value={task}
-            onChange={(event) => setTask(event.target.value)}
+            // value={task}
+            // onChange={(event) => setTask(event.target.value)}
+
+            // Register return method to work with a form like onChange,
+            {...register("task")}
           />
 
           <datalist id="task-suggestions">
@@ -45,6 +54,7 @@ export default function Home() {
             step={5}
             min={5}
             max={60}
+            {...register("minutesAmount", {valueAsNumber: true})}
           />
 
           <span>minutos.</span>
@@ -58,7 +68,7 @@ export default function Home() {
           <span>0</span>
         </CountDownContainer>
 
-        <StartCountDownButton disabled={!task} type="submit">
+        <StartCountDownButton disabled={isSubmitDisabled} type="submit">
           <Play />
           Começar
         </StartCountDownButton>
