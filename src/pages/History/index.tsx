@@ -3,26 +3,26 @@ import { HistoryContainer, HistoryList, Status } from "./styles";
 export default function History() {
   return (
     <HistoryContainer>
-      <h1>Meu Histórico</h1>
+      <h1>My History</h1>
 
       <HistoryList>
         <table>
           <thead>
             <tr>
-              <th>Tarefa</th>
-              <th>Duração</th>
-              <th>Início</th>
+              <th>Task</th>
+              <th>Duration</th>
+              <th>Starts</th>
               <th>Status</th>
             </tr>
           </thead>
 
           <tbody>
             <tr>
-              <td>Tarefa</td>
-              <td>20 minutos</td>
-              <td>Há 2 meses</td>
+              <td>Task</td>
+              <td>20 minutes</td>
+              <td>2 months ago</td>
               <td>
-                <Status statusColor="green">Concluído</Status>
+                <Status statusColor="green">Completed</Status>
               </td>
             </tr>
           </tbody>

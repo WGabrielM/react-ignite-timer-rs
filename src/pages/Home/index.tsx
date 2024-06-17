@@ -44,12 +44,12 @@ export default function Home() {
     <HomeContainer>
       <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
         <FormContainer>
-          <label htmlFor="task">Vou trabalhar em</label>
+          <label htmlFor="task">I will work in</label>
           <TaskInput
             id="task"
             type="text"
             list="task-suggestions"
-            placeholder="Dê um nome para o seu projeto"
+            placeholder="Give a name for a project"
             // Controlled component
             // value={task}
             // onChange={(event) => setTask(event.target.value)}
@@ -65,7 +65,7 @@ export default function Home() {
             <option value="Banana"></option>
           </datalist>
 
-          <label htmlFor="minutesAmount">durante</label>
+          <label htmlFor="minutesAmount">during</label>
           <MinutesAmountInput
             id="minutesAmount"
             type="number"
@@ -76,7 +76,7 @@ export default function Home() {
             {...register("minutesAmount", { valueAsNumber: true })}
           />
 
-          <span>minutos.</span>
+          <span>minutes.</span>
         </FormContainer>
 
         <CountDownContainer>
@@ -89,7 +89,7 @@ export default function Home() {
 
         <StartCountDownButton disabled={isSubmitDisabled} type="submit">
           <Play />
-          Começar
+          Start
         </StartCountDownButton>
       </form>
     </HomeContainer>
