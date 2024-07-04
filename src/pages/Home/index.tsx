@@ -1,5 +1,5 @@
 import * as zod from "zod";
-import { Play } from "phosphor-react";
+import { HandPalm, Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { differenceInSeconds } from "date-fns";
@@ -12,6 +12,7 @@ import {
   HomeContainer,
   MinutesAmountInput,
   CountDownContainer,
+  StopCountDownButton,
   StartCountDownButton,
 } from "./styles";
 
@@ -30,6 +31,7 @@ interface Cycle {
   task: string;
   minutesAmount: number;
   startDate: Date;
+  interruptedDate?: Date;
 }
 
 export default function Home() {
@@ -80,6 +82,19 @@ export default function Home() {
     reset();
   }
 
+  function handleInterruptCycle() {
+    setCycles(
+      cycles.map((cycle) => {
+        if (cycle.id == activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() };
+        } else {
+          return cycle;
+        }
+      })
+    );
+    setActiveCycleId(null);
+  }
+
   const totalSeconds = activeCycle ? activeCycle.minutesAmount * 60 : 0;
   const currentSeconds = activeCycle ? totalSeconds - amountSecondsPassed : 0;
 
@@ -108,6 +123,7 @@ export default function Home() {
             type="text"
             list="task-suggestions"
             placeholder="Give a name for a project"
+            disabled={!!activeCycle}
             // Controlled component
             // value={task}
             // onChange={(event) => setTask(event.target.value)}
@@ -131,6 +147,7 @@ export default function Home() {
             step={5}
             min={5}
             max={60}
+            disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
           />
 
@@ -145,10 +162,17 @@ export default function Home() {
           <span>{seconds[1]}</span>
         </CountDownContainer>
 
-        <StartCountDownButton disabled={isSubmitDisabled} type="submit">
-          <Play />
-          Start
-        </StartCountDownButton>
+        {activeCycle ? (
+          <StopCountDownButton onClick={handleInterruptCycle} type="button">
+            <HandPalm size={24} />
+            Stop
+          </StopCountDownButton>
+        ) : (
+          <StartCountDownButton disabled={isSubmitDisabled} type="submit">
+            <Play />
+            Start
+          </StartCountDownButton>
+        )}
       </form>
     </HomeContainer>
   );
