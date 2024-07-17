@@ -1,4 +1,5 @@
 import { useContext } from "react";
+import { useFormContext } from "react-hook-form";
 
 import { CyclesContext } from "../..";
 
@@ -7,7 +8,6 @@ import {
   MinutesAmountInput,
   TaskInput,
 } from "../NewCycleForm/styles";
-import { useFormContext } from "react-hook-form";
 
 export default function NewCycleForm() {
   const { activeCycle } = useContext(CyclesContext);
@@ -22,11 +22,6 @@ export default function NewCycleForm() {
         list="task-suggestions"
         placeholder="Give a name for a project"
         disabled={!!activeCycle}
-        // Controlled component
-        // value={task}
-        // onChange={(event) => setTask(event.target.value)}
-
-        // Register return method to work with a form like onChange,
         {...register("task")}
       />
 
@@ -43,7 +38,7 @@ export default function NewCycleForm() {
         type="number"
         placeholder="00"
         step={5}
-        min={1}
+        min={5}
         max={60}
         disabled={!!activeCycle}
         {...register("minutesAmount", { valueAsNumber: true })}

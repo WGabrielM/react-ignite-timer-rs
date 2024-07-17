@@ -16,9 +16,9 @@ import {
 interface Cycle {
   id: string;
   task: string;
-  minutesAmount: number;
   startDate: Date;
   finishedDate?: Date;
+  minutesAmount: number;
   interruptedDate?: Date;
 }
 
@@ -36,19 +36,9 @@ const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "Info the task"),
   minutesAmount: zod
     .number()
-    .min(1, "The cycle must be minimum 5 minutes")
+    .min(5, "The cycle must be minimum 5 minutes")
     .max(60, "The cycle must be maximum 60 minutes"),
 });
-
-const newCycleForm = useForm<NewCycleFormData>({
-  resolver: zodResolver(newCycleFormValidationSchema),
-  defaultValues: {
-    task: "",
-    minutesAmount: 0,
-  },
-});
-
-const { handleSubmit, watch, reset } = newCycleForm;
 
 type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
 
@@ -56,6 +46,16 @@ export default function Home() {
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
+
+  const newCycleForm = useForm<NewCycleFormData>({
+    resolver: zodResolver(newCycleFormValidationSchema),
+    defaultValues: {
+      task: "",
+      minutesAmount: 0,
+    },
+  });
+
+  const { handleSubmit, watch, reset } = newCycleForm;
 
   const activeCycle = cycles.find((cycle) => cycle.id == activeCycleId);
 
@@ -108,16 +108,21 @@ export default function Home() {
   const task = watch("task");
   const isSubmitDisabled = !task;
 
+  /**
+   * Prop Drilling -> When we have to MUCH props ONLY for communication between compoments
+   * Context API -> Allow sharing information among several components in the same time
+   */
+
   return (
     <HomeContainer>
-      <form onSubmit={handleSubmit(handleCreateNewCycle)}>
+      <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
         <CyclesContext.Provider
           value={{
-            amountSecondsPassed,
             activeCycle,
             activeCycleId,
-            markCurrentCycleAsFinished,
             setSecondsPassed,
+            amountSecondsPassed,
+            markCurrentCycleAsFinished,
           }}
         >
           <FormProvider {...newCycleForm}>
@@ -133,7 +138,7 @@ export default function Home() {
           </StopCountDownButton>
         ) : (
           <StartCountDownButton disabled={isSubmitDisabled} type="submit">
-            <Play />
+            <Play size={24} />
             Start
           </StartCountDownButton>
         )}

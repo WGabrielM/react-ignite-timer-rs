@@ -1,19 +1,15 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { differenceInSeconds } from "date-fns";
 
-import { CountDownContainer, Separator } from "./styles";
 import { CyclesContext } from "../..";
-
-interface CountDownProps {
-  activeCycle: any;
-}
+import { CountDownContainer, Separator } from "./styles";
 
 export default function CountDown() {
   const {
-    amountSecondsPassed,
-    setSecondsPassed,
     activeCycle,
     activeCycleId,
+    setSecondsPassed,
+    amountSecondsPassed,
     markCurrentCycleAsFinished,
   } = useContext(CyclesContext);
 
