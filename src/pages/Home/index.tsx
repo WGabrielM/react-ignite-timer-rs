@@ -1,36 +1,18 @@
 import * as zod from "zod";
-import { createContext, useState } from "react";
+import { useContext } from "react";
 import { HandPalm, Play } from "phosphor-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 
 import CountDown from "./components/CountDown";
 import NewCycleForm from "./components/NewCycleForm";
+import { CyclesContext } from "../../contexts/CyclesContext";
 
 import {
   HomeContainer,
   StopCountDownButton,
   StartCountDownButton,
 } from "./styles";
-
-interface Cycle {
-  id: string;
-  task: string;
-  startDate: Date;
-  finishedDate?: Date;
-  minutesAmount: number;
-  interruptedDate?: Date;
-}
-
-interface CyclesContextType {
-  amountSecondsPassed: number;
-  activeCycleId: string | null;
-  activeCycle: Cycle | undefined;
-  markCurrentCycleAsFinished: () => void;
-  setSecondsPassed: (seconds: number) => void;
-}
-
-export const CyclesContext = createContext({} as CyclesContextType);
 
 const newCycleFormValidationSchema = zod.object({
   task: zod.string().min(1, "Info the task"),
@@ -43,6 +25,8 @@ const newCycleFormValidationSchema = zod.object({
 type NewCycleFormData = zod.infer<typeof newCycleFormValidationSchema>;
 
 export default function Home() {
+  const { activeCycle, createNewCycle, interruptCurrentCycle } =
+    useContext(CyclesContext);
 
   const newCycleForm = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
@@ -52,29 +36,26 @@ export default function Home() {
     },
   });
 
-  const { handleSubmit, watch, reset } = newCycleForm;
-
- 
+  const { handleSubmit, watch, /*reset*/ } = newCycleForm;
 
   const task = watch("task");
   const isSubmitDisabled = !task;
 
   /**
-   * Prop Drilling -> When we have to MUCH props ONLY for communication between compoments
-   * Context API -> Allow sharing information among several components in the same time
+   * Prop Drilling -> When we have to MUCH props ONLY for communication between components
+   * Context API -> Allow sharing information among several components at the same time
    */
 
   return (
     <HomeContainer>
-      <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
-       
-          <FormProvider {...newCycleForm}>
-            <NewCycleForm />
-          </FormProvider>
-          <CountDown />
+      <form onSubmit={handleSubmit(createNewCycle)} action="">
+        <FormProvider {...newCycleForm}>
+          <NewCycleForm />
+        </FormProvider>
+        <CountDown />
 
         {activeCycle ? (
-          <StopCountDownButton onClick={handleInterruptCycle} type="button">
+          <StopCountDownButton onClick={interruptCurrentCycle} type="button">
             <HandPalm size={24} />
             Stop
           </StopCountDownButton>

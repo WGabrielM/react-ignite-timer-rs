@@ -15,6 +15,7 @@ interface Cycle {
 }
 
 interface CyclesContextType {
+  cycles:Cycle[];
   amountSecondsPassed: number;
   activeCycleId: string | null;
   activeCycle: Cycle | undefined;
@@ -24,14 +25,13 @@ interface CyclesContextType {
   createNewCycle: (data: CreateCycleData) => void;
 }
 
-export const CyclesContext = createContext({} as CyclesContextType)
+export const CyclesContext = createContext({} as CyclesContextType);
 
 interface CyclesContextProviderProps {
   children: ReactNode;
 }
 
 export function CyclesContextProvider({ children }: CyclesContextProviderProps) {
-
   const [cycles, setCycles] = useState<Cycle[]>([]);
   const [amountSecondsPassed, setAmountSecondsPassed] = useState(0);
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
@@ -67,6 +67,8 @@ export function CyclesContextProvider({ children }: CyclesContextProviderProps) 
     setCycles((state) => [...state, newCycle]);
     setActiveCycleId(id);
     setAmountSecondsPassed(0);
+
+    // reset();
   }
 
   function interruptCurrentCycle() {
@@ -82,9 +84,10 @@ export function CyclesContextProvider({ children }: CyclesContextProviderProps) 
     setActiveCycleId(null);
   }
 
-  return(  
+  return (
     <CyclesContext.Provider
       value={{
+        cycles,
         activeCycle,
         createNewCycle,
         activeCycleId,
@@ -97,5 +100,4 @@ export function CyclesContextProvider({ children }: CyclesContextProviderProps) 
       {children}
     </CyclesContext.Provider>
   );
- 
 }
