@@ -22,7 +22,7 @@ export default function History() {
           </thead>
 
           <tbody>
-            {cycles.map((cycle) => {
+            {cycles.map((cycle) => (
               <tr key={cycle.id}>
                 <td>{cycle.task}</td>
                 <td>{cycle.minutesAmount} minutes</td>
@@ -39,8 +39,8 @@ export default function History() {
                     <Status statusColor="yellow">In Progress</Status>
                   )}
                 </td>
-              </tr>;
-            })}
+              </tr>
+            ))}
           </tbody>
         </table>
       </HistoryList>
