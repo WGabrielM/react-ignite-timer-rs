@@ -10,11 +10,6 @@ export default function History() {
   return (
     <HistoryContainer>
       <h1>My History</h1>
-
-      <pre>
-        {JSON.stringify(cycles, null, 2)}
-      </pre>
-
       <HistoryList>
         <table>
           <thead>
@@ -27,14 +22,25 @@ export default function History() {
           </thead>
 
           <tbody>
-            <tr>
-              <td>Task</td>
-              <td>20 minutes</td>
-              <td>2 months ago</td>
-              <td>
-                <Status statusColor="green">Completed</Status>
-              </td>
-            </tr>
+            {cycles.map((cycle) => {
+              <tr key={cycle.id}>
+                <td>{cycle.task}</td>
+                <td>{cycle.minutesAmount} minutes</td>
+                <td>{cycle.startDate.toISOString()}</td>
+
+                <td>
+                  {cycle.finishedDate && (
+                    <Status statusColor="green">Completed</Status>
+                  )}
+                  {cycle.interruptedDate && (
+                    <Status statusColor="red">Stoped</Status>
+                  )}
+                  {!cycle.finishedDate && !cycle.interruptedDate && (
+                    <Status statusColor="yellow">In Progress</Status>
+                  )}
+                </td>
+              </tr>;
+            })}
           </tbody>
         </table>
       </HistoryList>
